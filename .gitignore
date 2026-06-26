@@ -114,3 +114,14 @@ browser/Firefox_Open_In_IINA/*
 deps/executable/youtube-dl
 deps/plugins
 
+# Home directory exclusions
+Library/
+Downloads/
+.cache/
+.local/
+.config/
+Applications/
+.Trash/
+*.hprof
+*.hprof.gz
+.AzureToolsForIntelliJ/
