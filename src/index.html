@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Slideshow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="slideshow-container">
+    <header class="header">
+      <h1>GitHub Slideshow</h1>
+      <span class="slide-counter">1 / 5</span>
+    </header>
+
+    <main class="slides-wrapper">
+      <div class="slide active" data-slide="1">
+        <h2>Welcome to GitHub</h2>
+        <p>Learn the basics of version control and collaboration.</p>
+        <div class="slide-icon">🚀</div>
+      </div>
+
+      <div class="slide" data-slide="2">
+        <h2>Creating a Repository</h2>
+        <p>A repository contains all your project files and revision history.</p>
+        <div class="slide-icon">📁</div>
+      </div>
+
+      <div class="slide" data-slide="3">
+        <h2>Branching</h2>
+        <p>Branches let you work on features without affecting the main code.</p>
+        <div class="slide-icon">🌿</div>
+      </div>
+
+      <div class="slide" data-slide="4">
+        <h2>Pull Requests</h2>
+        <p>Propose changes and collaborate with your team through code review.</p>
+        <div class="slide-icon">🔀</div>
+      </div>
+
+      <div class="slide" data-slide="5">
+        <h2>Get Started!</h2>
+        <p>You're ready to start your GitHub journey. Happy coding!</p>
+        <div class="slide-icon">🎉</div>
+      </div>
+    </main>
+
+    <nav class="controls">
+      <button class="btn btn-prev" id="prevBtn" disabled>← Previous</button>
+      <div class="progress-dots" id="progressDots"></div>
+      <button class="btn btn-next" id="nextBtn">Next →</button>
+    </nav>
+  </div>
+
+  <footer class="footer">
+    <p>Press <kbd>←</kbd> <kbd>→</kbd> or <kbd>Space</kbd> to navigate</p>
+  </footer>
+
+  <script src="slideshow.js"></script>
+</body>
+</html>

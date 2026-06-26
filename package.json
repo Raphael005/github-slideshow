@@ -1,0 +1,36 @@
+{
+  "name": "github-slideshow",
+  "version": "1.0.0",
+  "description": "Interactive slideshow for learning GitHub workflows",
+  "main": "src/slideshow.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raphael005/github-slideshow.git"
+  },
+  "keywords": [
+    "github",
+    "slideshow",
+    "tutorial",
+    "learning"
+  ],
+  "author": "Raphael005",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  }
+}
