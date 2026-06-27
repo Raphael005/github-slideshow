@@ -1,5 +1,6 @@
 # GitHub Slideshow
 
+[![Test](https://github.com/Raphael005/github-slideshow/actions/workflows/test.yml/badge.svg)](https://github.com/Raphael005/github-slideshow/actions/workflows/test.yml)
 [![Deploy to GitHub Pages](https://github.com/Raphael005/github-slideshow/actions/workflows/deploy.yml/badge.svg)](https://github.com/Raphael005/github-slideshow/actions/workflows/deploy.yml)
 
 An interactive slideshow application for learning GitHub workflows and collaboration.
