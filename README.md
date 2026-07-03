@@ -14,6 +14,7 @@ An interactive slideshow application for learning GitHub workflows and collabora
 - 👆 Touch swipe support for mobile
 - 🎨 GitHub dark theme with responsive design
 - 📍 Progress dots for quick navigation
+- ▶️ Autoplay with configurable interval
 
 ## Getting Started
 
@@ -44,6 +45,39 @@ yarn test
 # Run tests with coverage
 yarn test:coverage
 ```
+
+## Autoplay
+
+The slideshow supports automatic slide advancement with play/pause controls.
+
+### Basic Usage
+
+```javascript
+const slideshow = new Slideshow();
+slideshow.startAutoplay();  // Start with default 3-second interval
+slideshow.stopAutoplay();   // Pause autoplay
+slideshow.toggleAutoplay(); // Toggle play/pause
+```
+
+### Custom Interval
+
+```javascript
+// Set interval at initialization (in milliseconds)
+const slideshow = new Slideshow({ autoplayInterval: 5000 });
+
+// Or change interval dynamically (minimum 500ms)
+slideshow.setAutoplayInterval(2000);
+```
+
+### Autoplay Button
+
+Add an autoplay button to your HTML:
+
+```html
+<button id="autoplayBtn">▶ Play</button>
+```
+
+The button text and `aria-pressed` attribute update automatically.
 
 ## Project Structure
 
