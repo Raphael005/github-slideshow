@@ -212,4 +212,203 @@ describe('Slideshow', () => {
       expect(slideshow.currentSlide).toBe(3);
     });
   });
+
+  describe('autoplay', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    test('should initialize with autoplay disabled', () => {
+      const slideshow = new Slideshow();
+      expect(slideshow.isPlaying).toBe(false);
+      expect(slideshow.autoplayTimer).toBeNull();
+    });
+
+    test('should use default autoplay interval of 3000ms', () => {
+      const slideshow = new Slideshow();
+      expect(slideshow.autoplayInterval).toBe(3000);
+    });
+
+    test('should accept custom autoplay interval via options', () => {
+      const slideshow = new Slideshow({ autoplayInterval: 5000 });
+      expect(slideshow.autoplayInterval).toBe(5000);
+    });
+
+    test('startAutoplay() should set isPlaying to true', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      expect(slideshow.isPlaying).toBe(true);
+    });
+
+    test('startAutoplay() should create a timer', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      expect(slideshow.autoplayTimer).not.toBeNull();
+    });
+
+    test('startAutoplay() should advance slides after interval', () => {
+      const slideshow = new Slideshow({ autoplayInterval: 1000 });
+      slideshow.startAutoplay();
+      
+      expect(slideshow.currentSlide).toBe(1);
+      jest.advanceTimersByTime(1000);
+      expect(slideshow.currentSlide).toBe(2);
+      jest.advanceTimersByTime(1000);
+      expect(slideshow.currentSlide).toBe(3);
+    });
+
+    test('startAutoplay() should loop back to first slide after last', () => {
+      const slideshow = new Slideshow({ autoplayInterval: 1000 });
+      slideshow.goTo(3);
+      slideshow.startAutoplay();
+      
+      jest.advanceTimersByTime(1000);
+      expect(slideshow.currentSlide).toBe(1);
+    });
+
+    test('startAutoplay() should not start if already playing', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      const firstTimer = slideshow.autoplayTimer;
+      
+      slideshow.startAutoplay();
+      expect(slideshow.autoplayTimer).toBe(firstTimer);
+    });
+
+    test('stopAutoplay() should set isPlaying to false', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      slideshow.stopAutoplay();
+      expect(slideshow.isPlaying).toBe(false);
+    });
+
+    test('stopAutoplay() should clear the timer', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      slideshow.stopAutoplay();
+      expect(slideshow.autoplayTimer).toBeNull();
+    });
+
+    test('stopAutoplay() should stop slide advancement', () => {
+      const slideshow = new Slideshow({ autoplayInterval: 1000 });
+      slideshow.startAutoplay();
+      jest.advanceTimersByTime(1000);
+      expect(slideshow.currentSlide).toBe(2);
+      
+      slideshow.stopAutoplay();
+      jest.advanceTimersByTime(2000);
+      expect(slideshow.currentSlide).toBe(2); // Should not advance
+    });
+
+    test('stopAutoplay() should do nothing if not playing', () => {
+      const slideshow = new Slideshow();
+      expect(() => slideshow.stopAutoplay()).not.toThrow();
+      expect(slideshow.isPlaying).toBe(false);
+    });
+
+    test('toggleAutoplay() should start when stopped', () => {
+      const slideshow = new Slideshow();
+      slideshow.toggleAutoplay();
+      expect(slideshow.isPlaying).toBe(true);
+    });
+
+    test('toggleAutoplay() should stop when playing', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      slideshow.toggleAutoplay();
+      expect(slideshow.isPlaying).toBe(false);
+    });
+
+    test('setAutoplayInterval() should update interval', () => {
+      const slideshow = new Slideshow();
+      slideshow.setAutoplayInterval(5000);
+      expect(slideshow.autoplayInterval).toBe(5000);
+    });
+
+    test('setAutoplayInterval() should reject intervals below 500ms', () => {
+      const slideshow = new Slideshow({ autoplayInterval: 3000 });
+      slideshow.setAutoplayInterval(100);
+      expect(slideshow.autoplayInterval).toBe(3000);
+    });
+
+    test('setAutoplayInterval() should restart autoplay with new interval if playing', () => {
+      const slideshow = new Slideshow({ autoplayInterval: 1000 });
+      slideshow.startAutoplay();
+      
+      jest.advanceTimersByTime(500);
+      slideshow.setAutoplayInterval(2000);
+      
+      // Old timer should be cleared, new one started
+      expect(slideshow.isPlaying).toBe(true);
+      expect(slideshow.autoplayInterval).toBe(2000);
+      
+      // Slide shouldn't advance after 1000ms (old interval)
+      jest.advanceTimersByTime(1000);
+      expect(slideshow.currentSlide).toBe(1);
+      
+      // Should advance after 2000ms total from setAutoplayInterval
+      jest.advanceTimersByTime(1000);
+      expect(slideshow.currentSlide).toBe(2);
+    });
+  });
+
+  describe('autoplay button', () => {
+    beforeEach(() => {
+      // Add autoplay button to DOM
+      const btn = document.createElement('button');
+      btn.id = 'autoplayBtn';
+      document.body.appendChild(btn);
+      
+      jest.useFakeTimers();
+      jest.resetModules();
+      Slideshow = require('../src/slideshow.js');
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    test('should update button text to Pause when playing', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      
+      const btn = document.getElementById('autoplayBtn');
+      expect(btn.textContent).toBe('⏸ Pause');
+    });
+
+    test('should update button text to Play when stopped', () => {
+      const slideshow = new Slideshow();
+      slideshow.startAutoplay();
+      slideshow.stopAutoplay();
+      
+      const btn = document.getElementById('autoplayBtn');
+      expect(btn.textContent).toBe('▶ Play');
+    });
+
+    test('should set aria-pressed attribute', () => {
+      const slideshow = new Slideshow();
+      const btn = document.getElementById('autoplayBtn');
+      
+      slideshow.startAutoplay();
+      expect(btn.getAttribute('aria-pressed')).toBe('true');
+      
+      slideshow.stopAutoplay();
+      expect(btn.getAttribute('aria-pressed')).toBe('false');
+    });
+
+    test('should toggle autoplay on button click', () => {
+      const slideshow = new Slideshow();
+      const btn = document.getElementById('autoplayBtn');
+      
+      btn.click();
+      expect(slideshow.isPlaying).toBe(true);
+      
+      btn.click();
+      expect(slideshow.isPlaying).toBe(false);
+    });
+  });
 });
