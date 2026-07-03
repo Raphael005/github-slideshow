@@ -3,7 +3,7 @@
  */
 
 class Slideshow {
-  constructor() {
+  constructor(options = {}) {
     this.slides = document.querySelectorAll('.slide');
     this.totalSlides = this.slides.length;
     this.currentSlide = 1;
@@ -12,6 +12,12 @@ class Slideshow {
     this.nextBtn = document.getElementById('nextBtn');
     this.counter = document.querySelector('.slide-counter');
     this.dotsContainer = document.getElementById('progressDots');
+
+    // Autoplay settings
+    this.autoplayInterval = options.autoplayInterval || 3000;
+    this.autoplayTimer = null;
+    this.isPlaying = false;
+    this.autoplayBtn = document.getElementById('autoplayBtn');
 
     this.init();
   }
@@ -36,6 +42,11 @@ class Slideshow {
     // Button clicks
     this.prevBtn.addEventListener('click', () => this.prev());
     this.nextBtn.addEventListener('click', () => this.next());
+
+    // Autoplay button
+    if (this.autoplayBtn) {
+      this.autoplayBtn.addEventListener('click', () => this.toggleAutoplay());
+    }
 
     // Dot clicks
     this.dotsContainer.addEventListener('click', (e) => {
@@ -128,6 +139,57 @@ class Slideshow {
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index + 1 === this.currentSlide);
     });
+
+    // Update autoplay button text
+    if (this.autoplayBtn) {
+      this.autoplayBtn.textContent = this.isPlaying ? '⏸ Pause' : '▶ Play';
+      this.autoplayBtn.setAttribute('aria-pressed', this.isPlaying);
+    }
+  }
+
+  startAutoplay() {
+    if (this.isPlaying) return;
+
+    this.isPlaying = true;
+    this.autoplayTimer = setInterval(() => {
+      if (this.currentSlide < this.totalSlides) {
+        this.next();
+      } else {
+        // Loop back to first slide
+        this.goTo(1);
+      }
+    }, this.autoplayInterval);
+    this.updateUI();
+  }
+
+  stopAutoplay() {
+    if (!this.isPlaying) return;
+
+    this.isPlaying = false;
+    if (this.autoplayTimer) {
+      clearInterval(this.autoplayTimer);
+      this.autoplayTimer = null;
+    }
+    this.updateUI();
+  }
+
+  toggleAutoplay() {
+    if (this.isPlaying) {
+      this.stopAutoplay();
+    } else {
+      this.startAutoplay();
+    }
+  }
+
+  setAutoplayInterval(interval) {
+    if (interval < 500) return; // Minimum 500ms
+    this.autoplayInterval = interval;
+
+    // Restart autoplay with new interval if currently playing
+    if (this.isPlaying) {
+      this.stopAutoplay();
+      this.startAutoplay();
+    }
   }
 }
 
