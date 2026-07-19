@@ -12,7 +12,7 @@ An interactive slideshow application for learning GitHub workflows and collabora
 - 📖 5 interactive slides covering GitHub basics
 - ⌨️ Keyboard navigation (← → Space Home End)
 - 👆 Touch swipe support for mobile
-- 🎨 GitHub dark theme with responsive design
+- 🎨 Dark/light theme with system preference detection
 - 📍 Progress dots for quick navigation
 - ▶️ Autoplay with configurable interval
 
@@ -45,6 +45,26 @@ yarn test
 # Run tests with coverage
 yarn test:coverage
 ```
+
+## Theme Toggle
+
+The slideshow supports dark and light themes with automatic system preference detection.
+
+### Basic Usage
+
+```javascript
+const slideshow = new Slideshow();
+slideshow.toggleTheme();     // Toggle between dark/light
+slideshow.setTheme('light'); // Set specific theme
+slideshow.setTheme('dark');
+```
+
+### Features
+
+- Automatically detects system color scheme preference
+- Persists theme choice in localStorage
+- Toggle button in the header (🌙/☀️)
+- Accessible with proper ARIA labels
 
 ## Autoplay
 

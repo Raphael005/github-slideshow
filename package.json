@@ -27,10 +27,20 @@
   "jest": {
     "testEnvironment": "jsdom",
     "testMatch": [
-      "**/tests/**/*.test.js"
+      "<rootDir>/tests/**/*.test.js"
     ],
     "collectCoverageFrom": [
-      "src/**/*.js"
+      "<rootDir>/src/**/*.js"
+    ],
+    "roots": [
+      "<rootDir>/tests",
+      "<rootDir>/src"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules",
+      "<rootDir>/Downloads",
+      "<rootDir>/Projects",
+      "<rootDir>/Documents"
     ]
   },
   "devEngines": {

@@ -12,6 +12,20 @@
   --text-color: #c9d1d9;
   --text-muted: #8b949e;
   --border-color: #30363d;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --controls-bg: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] {
+  --primary-color: #0366d6;
+  --secondary-color: #28a745;
+  --background-color: #f6f8fa;
+  --surface-color: #ffffff;
+  --text-color: #24292f;
+  --text-muted: #57606a;
+  --border-color: #d0d7de;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --controls-bg: rgba(0, 0, 0, 0.03);
 }
 
 body {
@@ -33,7 +47,7 @@ body {
   border-radius: 12px;
   border: 1px solid var(--border-color);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px var(--shadow-color);
 }
 
 .header {
@@ -107,7 +121,7 @@ body {
   align-items: center;
   padding: 1.5rem 2rem;
   border-top: 1px solid var(--border-color);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--controls-bg);
 }
 
 .btn {
@@ -132,7 +146,7 @@ body {
 
 .btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .btn:disabled {
@@ -183,6 +197,31 @@ body {
   border-radius: 4px;
   padding: 0.2rem 0.5rem;
   font-family: monospace;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: var(--border-color);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: var(--text-muted);
+  transform: scale(1.05);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 @media (max-width: 600px) {
