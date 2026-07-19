@@ -32,5 +32,12 @@
     "collectCoverageFrom": [
       "src/**/*.js"
     ]
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "yarn",
+      "version": "4.17.0",
+      "onFail": "download"
+    }
   }
 }
