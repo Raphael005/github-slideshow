@@ -19,11 +19,16 @@ class Slideshow {
     this.isPlaying = false;
     this.autoplayBtn = document.getElementById('autoplayBtn');
 
+    // Theme settings
+    this.themeToggleBtn = document.getElementById('themeToggle');
+    this.currentTheme = this.getSavedTheme() || this.getSystemTheme();
+
     this.init();
   }
 
   init() {
     this.createDots();
+    this.applyTheme(this.currentTheme);
     this.bindEvents();
     this.updateUI();
   }
@@ -46,6 +51,11 @@ class Slideshow {
     // Autoplay button
     if (this.autoplayBtn) {
       this.autoplayBtn.addEventListener('click', () => this.toggleAutoplay());
+    }
+
+    // Theme toggle button
+    if (this.themeToggleBtn) {
+      this.themeToggleBtn.addEventListener('click', () => this.toggleTheme());
     }
 
     // Dot clicks
@@ -189,6 +199,53 @@ class Slideshow {
     if (this.isPlaying) {
       this.stopAutoplay();
       this.startAutoplay();
+    }
+  }
+
+  // Theme methods
+  getSavedTheme() {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('slideshow-theme');
+    }
+    return null;
+  }
+
+  getSystemTheme() {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    return 'dark';
+  }
+
+  applyTheme(theme) {
+    this.currentTheme = theme;
+    
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+
+    // Update toggle button icon
+    if (this.themeToggleBtn) {
+      this.themeToggleBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+      this.themeToggleBtn.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} theme`);
+    }
+
+    // Save preference
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('slideshow-theme', theme);
+    }
+  }
+
+  toggleTheme() {
+    const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+    this.applyTheme(newTheme);
+  }
+
+  setTheme(theme) {
+    if (theme === 'light' || theme === 'dark') {
+      this.applyTheme(theme);
     }
   }
 }

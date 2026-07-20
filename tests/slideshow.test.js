@@ -411,4 +411,142 @@ describe('Slideshow', () => {
       expect(slideshow.isPlaying).toBe(false);
     });
   });
+
+  describe('theme toggle', () => {
+    beforeEach(() => {
+      // Clear localStorage
+      localStorage.clear();
+      // Remove any existing data-theme attribute
+      document.documentElement.removeAttribute('data-theme');
+      
+      // Add theme toggle button to DOM
+      const btn = document.createElement('button');
+      btn.id = 'themeToggle';
+      document.body.appendChild(btn);
+      
+      jest.resetModules();
+      Slideshow = require('../src/slideshow.js');
+    });
+
+    test('should initialize with dark theme by default', () => {
+      // Mock matchMedia to return dark preference
+      window.matchMedia = jest.fn().mockImplementation(query => ({
+        matches: false, // prefers-color-scheme: light = false means dark
+        media: query,
+      }));
+      
+      const slideshow = new Slideshow();
+      expect(slideshow.currentTheme).toBe('dark');
+    });
+
+    test('should respect system light theme preference', () => {
+      window.matchMedia = jest.fn().mockImplementation(query => ({
+        matches: query === '(prefers-color-scheme: light)',
+        media: query,
+      }));
+      
+      const slideshow = new Slideshow();
+      expect(slideshow.currentTheme).toBe('light');
+    });
+
+    test('should load saved theme from localStorage', () => {
+      localStorage.setItem('slideshow-theme', 'light');
+      
+      const slideshow = new Slideshow();
+      expect(slideshow.currentTheme).toBe('light');
+    });
+
+    test('should save theme to localStorage when changed', () => {
+      const slideshow = new Slideshow();
+      slideshow.setTheme('light');
+      
+      expect(localStorage.getItem('slideshow-theme')).toBe('light');
+    });
+
+    test('toggleTheme() should switch from dark to light', () => {
+      window.matchMedia = jest.fn().mockImplementation(() => ({ matches: false }));
+      
+      const slideshow = new Slideshow();
+      expect(slideshow.currentTheme).toBe('dark');
+      
+      slideshow.toggleTheme();
+      expect(slideshow.currentTheme).toBe('light');
+    });
+
+    test('toggleTheme() should switch from light to dark', () => {
+      localStorage.setItem('slideshow-theme', 'light');
+      
+      const slideshow = new Slideshow();
+      expect(slideshow.currentTheme).toBe('light');
+      
+      slideshow.toggleTheme();
+      expect(slideshow.currentTheme).toBe('dark');
+    });
+
+    test('should set data-theme attribute on documentElement for light theme', () => {
+      const slideshow = new Slideshow();
+      slideshow.setTheme('light');
+      
+      expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    });
+
+    test('should remove data-theme attribute for dark theme', () => {
+      const slideshow = new Slideshow();
+      slideshow.setTheme('light');
+      slideshow.setTheme('dark');
+      
+      expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+    });
+
+    test('should update toggle button icon for light theme', () => {
+      const slideshow = new Slideshow();
+      slideshow.setTheme('light');
+      
+      const btn = document.getElementById('themeToggle');
+      expect(btn.textContent).toBe('☀️');
+    });
+
+    test('should update toggle button icon for dark theme', () => {
+      const slideshow = new Slideshow();
+      slideshow.setTheme('light');
+      slideshow.setTheme('dark');
+      
+      const btn = document.getElementById('themeToggle');
+      expect(btn.textContent).toBe('🌙');
+    });
+
+    test('should update aria-label on theme change', () => {
+      const slideshow = new Slideshow();
+      const btn = document.getElementById('themeToggle');
+      
+      slideshow.setTheme('light');
+      expect(btn.getAttribute('aria-label')).toBe('Switch to dark theme');
+      
+      slideshow.setTheme('dark');
+      expect(btn.getAttribute('aria-label')).toBe('Switch to light theme');
+    });
+
+    test('should toggle theme on button click', () => {
+      window.matchMedia = jest.fn().mockImplementation(() => ({ matches: false }));
+      
+      const slideshow = new Slideshow();
+      const btn = document.getElementById('themeToggle');
+      
+      expect(slideshow.currentTheme).toBe('dark');
+      
+      btn.click();
+      expect(slideshow.currentTheme).toBe('light');
+      
+      btn.click();
+      expect(slideshow.currentTheme).toBe('dark');
+    });
+
+    test('setTheme() should ignore invalid themes', () => {
+      const slideshow = new Slideshow();
+      slideshow.setTheme('dark');
+      slideshow.setTheme('invalid');
+      
+      expect(slideshow.currentTheme).toBe('dark');
+    });
+  });
 });
