@@ -24,7 +24,7 @@ describe('Slideshow', () => {
 
     // Clear module cache and require fresh
     jest.resetModules();
-    Slideshow = require('../src/slideshow.js');
+    Slideshow = require('../slideshow.js');
   });
 
   afterEach(() => {
@@ -365,7 +365,7 @@ describe('Slideshow', () => {
       
       jest.useFakeTimers();
       jest.resetModules();
-      Slideshow = require('../src/slideshow.js');
+      Slideshow = require('../slideshow.js');
     });
 
     afterEach(() => {
@@ -425,7 +425,7 @@ describe('Slideshow', () => {
       document.body.appendChild(btn);
       
       jest.resetModules();
-      Slideshow = require('../src/slideshow.js');
+      Slideshow = require('../slideshow.js');
     });
 
     test('should initialize with dark theme by default', () => {

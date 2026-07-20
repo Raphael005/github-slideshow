@@ -2,7 +2,7 @@
   "name": "github-slideshow",
   "version": "1.0.0",
   "description": "Interactive slideshow for learning GitHub workflows",
-  "main": "src/slideshow.js",
+  "main": "slideshow.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -30,17 +30,19 @@
       "<rootDir>/tests/**/*.test.js"
     ],
     "collectCoverageFrom": [
-      "<rootDir>/src/**/*.js"
+      "<rootDir>/*.js"
     ],
     "roots": [
       "<rootDir>/tests",
-      "<rootDir>/src"
+      "<rootDir>"
     ],
     "modulePathIgnorePatterns": [
       "<rootDir>/node_modules",
       "<rootDir>/Downloads",
       "<rootDir>/Projects",
-      "<rootDir>/Documents"
+      "<rootDir>/Documents",
+      "<rootDir>/Library",
+      "<rootDir>/next.js"
     ]
   },
   "devEngines": {
